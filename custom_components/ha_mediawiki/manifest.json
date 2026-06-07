@@ -1,0 +1,12 @@
+{
+  "domain": "ha_mediawiki",
+  "name": "MediaWiki",
+  "codeowners": [
+    "@ludeeus"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/ludeeus/ha_mediawiki",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/ludeeus/ha_mediawiki/issues",
+  "version": "0.1.0"
+}
