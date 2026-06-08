@@ -24,6 +24,7 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
+    # TODO: Handle more than just Test Wikipedia
     async def async_step_user(
         self,
         user_input: dict | None = None,
@@ -95,4 +96,4 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             password=password,
             session=async_create_clientsession(self.hass),
         )
-        await client.async_get_data()
+        await client.login()
