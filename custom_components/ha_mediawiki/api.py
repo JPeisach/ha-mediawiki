@@ -2,25 +2,31 @@
 
 from __future__ import annotations
 
+import asyncio
 import socket
 from typing import Any
 
 import aiohttp
 import async_timeout
+import pywikibot
+import pywikibot.data
+import pywikibot.data.api
+from pywikibot.page import BasePage
+from pywikibot.site import BaseSite
 
 
-class IntegrationBlueprintApiClientError(Exception):
+class MediaWikiApiClientError(Exception):
     """Exception to indicate a general API error."""
 
 
-class IntegrationBlueprintApiClientCommunicationError(
-    IntegrationBlueprintApiClientError,
+class MediaWikiApiClientCommunicationError(
+    MediaWikiApiClientError,
 ):
     """Exception to indicate a communication error."""
 
 
-class IntegrationBlueprintApiClientAuthenticationError(
-    IntegrationBlueprintApiClientError,
+class MediaWikiApiClientAuthenticationError(
+    MediaWikiApiClientError,
 ):
     """Exception to indicate an authentication error."""
 
@@ -29,14 +35,22 @@ def _verify_response_or_raise(response: aiohttp.ClientResponse) -> None:
     """Verify that the response is valid."""
     if response.status in (401, 403):
         msg = "Invalid credentials"
-        raise IntegrationBlueprintApiClientAuthenticationError(
+        raise MediaWikiApiClientAuthenticationError(
             msg,
         )
     response.raise_for_status()
 
 
-class IntegrationBlueprintApiClient:
+class MediaWikiApiClient:
     """Sample API Client."""
+
+    # It's probably better to just use the pretty output from
+    # pywikibot, but we need to ensure we don't make blocking calls
+    # so each possible call gets its function instead of a generic
+    # wrapper
+    def _getPage(self) -> BasePage:
+        p = pywikibot.Page(pywikibot.Site(self._site), "Test")
+        return p
 
     def __init__(
         self,
@@ -48,54 +62,15 @@ class IntegrationBlueprintApiClient:
         self._username = username
         self._password = password
         self._session = session
+        # for now, lets just use test wikipedia *only*
+        self._site = "wikipedia:test"
 
     async def async_get_data(self) -> Any:
         """Get data from the API."""
-        return await self._api_wrapper(
-            method="get",
-            url="https://jsonplaceholder.typicode.com/posts/1",
+        return await asyncio.get_running_loop().run_in_executor(
+            None,
+            # pywikibot.data.api.Request(
+            #     self._site, action=action, **params
+            # ).submit,
+            self._getPage,
         )
-
-    async def async_set_title(self, value: str) -> Any:
-        """Get data from the API."""
-        return await self._api_wrapper(
-            method="patch",
-            url="https://jsonplaceholder.typicode.com/posts/1",
-            data={"title": value},
-            headers={"Content-type": "application/json; charset=UTF-8"},
-        )
-
-    async def _api_wrapper(
-        self,
-        method: str,
-        url: str,
-        data: dict | None = None,
-        headers: dict | None = None,
-    ) -> Any:
-        """Get information from the API."""
-        try:
-            async with async_timeout.timeout(10):
-                response = await self._session.request(
-                    method=method,
-                    url=url,
-                    headers=headers,
-                    json=data,
-                )
-                _verify_response_or_raise(response)
-                return await response.json()
-
-        except TimeoutError as exception:
-            msg = f"Timeout error fetching information - {exception}"
-            raise IntegrationBlueprintApiClientCommunicationError(
-                msg,
-            ) from exception
-        except (aiohttp.ClientError, socket.gaierror) as exception:
-            msg = f"Error fetching information - {exception}"
-            raise IntegrationBlueprintApiClientCommunicationError(
-                msg,
-            ) from exception
-        except Exception as exception:  # pylint: disable=broad-except
-            msg = f"Something really wrong happened! - {exception}"
-            raise IntegrationBlueprintApiClientError(
-                msg,
-            ) from exception
