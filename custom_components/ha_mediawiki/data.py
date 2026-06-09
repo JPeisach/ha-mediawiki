@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from homeassistant.loader import Integration
 
     from .api import MediaWikiApiClient
-    from .coordinator import BlueprintDataUpdateCoordinator
+    from .coordinator import MediaWikiDataUpdateCoordinator
 
 
 type MediaWikiConfigEntry = ConfigEntry[MediaWikiData]
@@ -21,5 +21,5 @@ class MediaWikiData:
     """Data for the Blueprint integration."""
 
     client: MediaWikiApiClient
-    coordinator: BlueprintDataUpdateCoordinator
+    coordinator: MediaWikiDataUpdateCoordinator
     integration: Integration

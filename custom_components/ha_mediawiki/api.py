@@ -14,6 +14,7 @@ import pywikibot.data.api
 from pywikibot.page import BasePage
 from pywikibot.site import BaseSite
 from pywikibot.login import ClientLoginManager
+from sqlalchemy import false
 
 
 class MediaWikiApiClientError(Exception):
@@ -75,6 +76,7 @@ class MediaWikiApiClient:
         self._session = session
         # TODO: Use other sites - for now, lets just use test wikipedia *only*
         self._site_txt = "wikipedia:test"
+        self._logged_in = False
 
     async def login(self):
         # yep.. each of these are like this - and they have to be this way
@@ -100,4 +102,7 @@ class MediaWikiApiClient:
         #     # ).submit,
         #     self._getPage,
         # )
+        if self._logged_in:
+            print("logged in")
+            return self._login_mgr.site.userinfo
         return ""
