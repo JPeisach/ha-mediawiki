@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from homeassistant.const import CONF_USERNAME
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -25,4 +26,5 @@ class MediaWikiEntity(CoordinatorEntity[MediaWikiDataUpdateCoordinator]):
                     coordinator.config_entry.entry_id,
                 ),
             },
+            name=coordinator.config_entry.data[CONF_USERNAME],
         )

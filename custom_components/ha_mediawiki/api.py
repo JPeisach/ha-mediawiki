@@ -63,6 +63,7 @@ class MediaWikiApiClient:
         self,
         username: str,
         password: str,
+        site_url: str,
         session: aiohttp.ClientSession,
     ) -> None:
         """Sample API Client."""
@@ -70,7 +71,7 @@ class MediaWikiApiClient:
         self._password = password
         self._session = session
         # TODO: Use other sites - for now, lets just use test wikipedia *only*
-        self._site_txt = "wikipedia:test"
+        self._site_url = site_url
         self._logged_in = False
 
     # TODO: make sure we only define what we need
@@ -80,7 +81,7 @@ class MediaWikiApiClient:
         # *I think* we can't assign fields in code that is running in
         # executor
         self._site = await asyncio.get_running_loop().run_in_executor(
-            None, lambda: pywikibot.Site(self._site_txt)
+            None, lambda: pywikibot.Site(url=self._site_url)
         )
         self._login_mgr = await asyncio.get_running_loop().run_in_executor(
             None,

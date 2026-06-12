@@ -14,7 +14,7 @@ from pywikibot import User
 import pywikibot
 import pywikibot.login
 from pywikibot.pagegenerators import UserContributionsGenerator
-from pywikibot.site import BaseSite
+from pywikibot.site import APISite, BaseSite
 
 from .api import (
     MediaWikiApiClient,
@@ -34,7 +34,7 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
 
     config_entry: MediaWikiConfigEntry
     global_userinfo: dict
-    site: BaseSite
+    site: APISite
     user: User
     user_contributions: Any  # TODO: What's the type?
     user_contributions_count: int
@@ -55,7 +55,7 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
         await self.api.login()
 
         # Direct references
-        self.site = self.api.site()
+        self.site = self.api.site()  # type: ignore
         self.user = self.api.user()
 
     async def _async_update_data(self) -> Any:
