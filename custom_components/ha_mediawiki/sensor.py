@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 ENTITY_DESCRIPTIONS = (
     SensorEntityDescription(
         key="ha_mediawiki",
-        name="Integration Sensor",
+        name="Contributions",
         icon="mdi:format-quote-close",
     ),
 )
@@ -40,6 +40,7 @@ async def async_setup_entry(
     )
 
 
+# TODO: Generic sensors
 class MediaWikiSensor(MediaWikiEntity, SensorEntity):
     """ha_mediawiki Sensor class."""
 
@@ -54,5 +55,5 @@ class MediaWikiSensor(MediaWikiEntity, SensorEntity):
 
     @property
     def native_value(self) -> str | None:
-        """Return the native value of the sensor."""
-        return self.coordinator.data.get("name")
+        """Count contributions."""
+        return str(self.coordinator.user_contributions_count)

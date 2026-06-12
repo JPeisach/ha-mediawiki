@@ -3,18 +3,13 @@
 from __future__ import annotations
 
 import asyncio
-import socket
-from typing import Any
+from typing import Any, Generator
 
 import aiohttp
-import async_timeout
 import pywikibot
-import pywikibot.data
-import pywikibot.data.api
+from pywikibot.login import ClientLoginManager
 from pywikibot.page import BasePage
 from pywikibot.site import BaseSite
-from pywikibot.login import ClientLoginManager
-from sqlalchemy import false
 
 
 class MediaWikiApiClientError(Exception):
@@ -56,13 +51,13 @@ class MediaWikiApiClient:
             return p
         return None
 
-    def _create_site(self) -> BaseSite:
-        return pywikibot.Site(self._site_txt)
+    # FIXME: should this be a public interface?
+    def site(self) -> BaseSite:
+        return self._site
 
-    def _create_login_mgr(self) -> ClientLoginManager:
-        return ClientLoginManager(
-            user=self._username, password=self._password, site=self._site
-        )
+    def user(self) -> pywikibot.User:
+        # For quick reference
+        return self._user
 
     def __init__(
         self,
@@ -78,31 +73,60 @@ class MediaWikiApiClient:
         self._site_txt = "wikipedia:test"
         self._logged_in = False
 
+    # TODO: make sure we only define what we need
     async def login(self):
         # yep.. each of these are like this - and they have to be this way
         # so we can assign them their private vars, because
         # *I think* we can't assign fields in code that is running in
         # executor
         self._site = await asyncio.get_running_loop().run_in_executor(
-            None, self._create_site
+            None, lambda: pywikibot.Site(self._site_txt)
         )
         self._login_mgr = await asyncio.get_running_loop().run_in_executor(
-            None, self._create_login_mgr
+            None,
+            lambda: ClientLoginManager(
+                user=self._username, password=self._password, site=self._site
+            ),
         )
         self._logged_in = await asyncio.get_running_loop().run_in_executor(
             None, self._login_mgr.login
         )
+        self._user = await asyncio.get_running_loop().run_in_executor(
+            None, lambda: pywikibot.User(self._login_mgr.site, self._username)
+        )
 
-    async def async_get_data(self) -> Any:
-        """Get data from the API."""
-        # return await asyncio.get_running_loop().run_in_executor(
-        #     None,
-        #     # pywikibot.data.api.Request(
-        #     #     self._site, action=action, **params
-        #     # ).submit,
-        #     self._getPage,
-        # )
+    async def async_get_userinfo(self) -> Any:
+        """Get userinfo per site."""
         if self._logged_in:
-            print("logged in")
             return self._login_mgr.site.userinfo
         return ""
+
+    # TODO: Across the entire file, fix types and returns
+    async def async_get_user_contributions(self) -> Any:
+        if self._logged_in:
+            return await asyncio.get_running_loop().run_in_executor(
+                None, self._user.contributions
+            )
+        return ""
+
+    def _count_user_contribs(
+        self,
+    ) -> int:
+        j = 0
+        for _ in self._user.contributions():
+            j += 1
+        return j
+
+    # TODO: deduplicate from above?
+    async def async_get_user_contributions_count(self) -> int:
+        return await asyncio.get_running_loop().run_in_executor(
+            None, self._count_user_contribs
+        )
+
+    async def async_get_globaluserinfo(self) -> dict:
+        if self._logged_in:
+            return await asyncio.get_running_loop().run_in_executor(
+                None,
+                lambda: self._login_mgr.site.get_globaluserinfo(user=self._username),
+            )
+        return {}

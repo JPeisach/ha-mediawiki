@@ -23,8 +23,8 @@ if TYPE_CHECKING:
 ENTITY_DESCRIPTIONS = (
     BinarySensorEntityDescription(
         key="ha_mediawiki",
-        name="MediaWiki Binary Sensor",
-        device_class=BinarySensorDeviceClass.CONNECTIVITY,
+        name="Message",
+        device_class=BinarySensorDeviceClass.UPDATE,
     ),
 )
 
@@ -59,4 +59,4 @@ class MediaWikiBinarySensor(MediaWikiEntity, BinarySensorEntity):
     @property
     def is_on(self) -> bool:
         """Return true if the binary_sensor is on."""
-        return self.coordinator.data.get("messages") == True
+        return True
