@@ -1,4 +1,4 @@
-"""BlueprintEntity class."""
+"""MediaWikiEntity class."""
 
 from __future__ import annotations
 
@@ -6,14 +6,11 @@ from homeassistant.const import CONF_USERNAME
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import ATTRIBUTION
 from .coordinator import MediaWikiDataUpdateCoordinator
 
 
 class MediaWikiEntity(CoordinatorEntity[MediaWikiDataUpdateCoordinator]):
-    """BlueprintEntity class."""
-
-    _attr_attribution = ATTRIBUTION
+    """MediaWikiEntity class."""
 
     def __init__(self, coordinator: MediaWikiDataUpdateCoordinator) -> None:
         """Initialize."""
@@ -26,5 +23,7 @@ class MediaWikiEntity(CoordinatorEntity[MediaWikiDataUpdateCoordinator]):
                     coordinator.config_entry.entry_id,
                 ),
             },
+            model=coordinator.site.sitename,
+            model_id=coordinator.config_entry.data[CONF_USERNAME],
             name=coordinator.config_entry.data[CONF_USERNAME],
         )

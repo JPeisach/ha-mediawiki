@@ -18,7 +18,7 @@ type MediaWikiConfigEntry = ConfigEntry[MediaWikiData]
 
 @dataclass
 class MediaWikiData:
-    """Data for the Blueprint integration."""
+    """Data for the MediaWiki integration."""
 
     client: MediaWikiApiClient
     coordinator: MediaWikiDataUpdateCoordinator

@@ -1,15 +1,17 @@
-"""Sample API Client."""
+"""MediaWiki API Client."""
 
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Generator
+from typing import TYPE_CHECKING, Any
 
-import aiohttp
 import pywikibot
 from pywikibot.login import ClientLoginManager
-from pywikibot.page import BasePage
-from pywikibot.site import BaseSite
+
+if TYPE_CHECKING:
+    import aiohttp
+    from pywikibot.page import BasePage
+    from pywikibot.site import BaseSite
 
 
 class MediaWikiApiClientError(Exception):
@@ -66,16 +68,16 @@ class MediaWikiApiClient:
         site_url: str,
         session: aiohttp.ClientSession,
     ) -> None:
-        """Sample API Client."""
+        """MediaWiki API Client."""
         self._username = username
         self._password = password
         self._session = session
-        # TODO: Use other sites - for now, lets just use test wikipedia *only*
         self._site_url = site_url
         self._logged_in = False
 
     # TODO: make sure we only define what we need
     async def login(self):
+        """Login to the MediaWiki instance."""
         # yep.. each of these are like this - and they have to be this way
         # so we can assign them their private vars, because
         # *I think* we can't assign fields in code that is running in

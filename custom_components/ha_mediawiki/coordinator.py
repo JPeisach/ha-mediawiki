@@ -2,19 +2,11 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 from typing import TYPE_CHECKING, Any
 
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
-from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from pywikibot import User
-import pywikibot
-import pywikibot.login
-from pywikibot.pagegenerators import UserContributionsGenerator
-from pywikibot.site import APISite, BaseSite
 
 from .api import (
     MediaWikiApiClient,
@@ -23,6 +15,10 @@ from .api import (
 )
 
 if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
+    from pywikibot import User
+    from pywikibot.site import APISite
+
     from .data import MediaWikiConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
@@ -35,7 +31,9 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
     config_entry: MediaWikiConfigEntry
     global_userinfo: dict
     site: APISite
+    sitename: str
     user: User
+    userinfo: dict
     user_contributions: Any  # TODO: What's the type?
     user_contributions_count: int
 
@@ -44,19 +42,21 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
         hass: HomeAssistant,
         config_entry: MediaWikiConfigEntry,
         api: MediaWikiApiClient,
-    ):
+    ) -> None:
+        """Initialize coordinator."""
         super().__init__(
             hass, _LOGGER, name="MediaWiki API Coordinator", config_entry=config_entry
         )
         self.config_entry = config_entry
         self.api = api
 
-    async def _async_setup(self):
+    async def _async_setup(self) -> None:
         await self.api.login()
 
         # Direct references
-        self.site = self.api.site()  # type: ignore
+        self.site = self.api.site()  # type: ignore  # noqa: PGH003
         self.user = self.api.user()
+        self.userinfo = await self.api.async_get_userinfo()
 
     async def _async_update_data(self) -> Any:
         """Update data via library."""

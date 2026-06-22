@@ -1,4 +1,4 @@
-"""Adds config flow for Blueprint."""
+"""Adds config flow for MediaWiki Integration."""
 
 from __future__ import annotations
 
@@ -20,11 +20,10 @@ from .const import DOMAIN, LOGGER
 
 
 class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
-    """Config flow for Blueprint."""
+    """Config flow for MediaWiki Integration."""
 
     VERSION = 1
 
-    # TODO: Handle more than just Test Wikipedia
     async def async_step_user(
         self,
         user_input: dict | None = None,
@@ -49,9 +48,7 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 _errors["base"] = "unknown"
             else:
                 await self.async_set_unique_id(
-                    ## Do NOT use this in production code
-                    ## The unique_id should never be something that can change
-                    ## https://developers.home-assistant.io/docs/config_entries_config_flow_handler#unique-ids
+                    # Technically this should "never change", but I mean.. it shouldn't
                     unique_id=slugify(user_input[CONF_USERNAME] + user_input[CONF_URL])
                 )
                 self._abort_if_unique_id_configured()

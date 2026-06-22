@@ -2,11 +2,11 @@
   "domain": "ha_mediawiki",
   "name": "MediaWiki",
   "codeowners": [
-    "@ludeeus"
+    "@jpeisach"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/ludeeus/ha_mediawiki",
+  "documentation": "https://github.com/jpeisach/ha_mediawiki",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/ludeeus/ha_mediawiki/issues",
+  "issue_tracker": "https://github.com/jpeisach/ha_mediawiki/issues",
   "version": "0.1.0"
 }

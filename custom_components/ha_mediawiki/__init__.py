@@ -7,20 +7,16 @@ https://github.com/ludeeus/ha_mediawiki
 
 from __future__ import annotations
 
-from datetime import timedelta
 from typing import TYPE_CHECKING
 
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_URL, CONF_USERNAME, Platform
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.loader import async_get_loaded_integration
 
 from .api import MediaWikiApiClient
-from .const import DOMAIN, LOGGER
 from .coordinator import MediaWikiDataUpdateCoordinator
-from .data import MediaWikiData
 
 if TYPE_CHECKING:
+    from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
 
     from .data import MediaWikiConfigEntry

@@ -5,7 +5,9 @@
                 "description": "If you need help with the configuration have a look here: {documentation_url}",
                 "data": {
                     "username": "Username",
-                    "password": "Password"
+                    "password": "Password",
+                    "url": "MediaWiki Instance URL",
+                    "name": "MediaWiki Instance Name"
                 }
             }
         },
