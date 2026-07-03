@@ -28,3 +28,10 @@ class MediaWikiEntity(CoordinatorEntity[MediaWikiDataUpdateCoordinator]):
             model_id=coordinator.config_entry.data[CONF_URL],
             name=coordinator.config_entry.data[CONF_USERNAME],
         )
+
+    @property
+    def unique_id(self) -> str:
+        """Generate a unique ID for this entity."""
+        if self.entity_description is not None:
+            return f"{self.coordinator.sitename}_{self.coordinator.userinfo['name']}_{self.entity_description.key}"
+        return f"{self.coordinator.sitename}_{self.name}"

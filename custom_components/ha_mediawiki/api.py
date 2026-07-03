@@ -98,6 +98,11 @@ class MediaWikiApiClient:
             None, lambda: pywikibot.User(self._login_mgr.site, self._username)
         )
 
+    async def async_get_sitename(self) -> str:
+        return await asyncio.get_running_loop().run_in_executor(
+            None, lambda: str(self._site)
+        )
+
     async def async_get_userinfo(self) -> Any:
         """Get userinfo per site."""
         if self._logged_in:

@@ -43,7 +43,6 @@ ENTITY_DESCRIPTIONS: list[MediaWikiSensorEntityDescription] = [
     MediaWikiSensorEntityDescription(
         key="last_edit",
         name="Last Edit",
-        state_class=SensorStateClass.MEASUREMENT,
         value_fn=lambda a: a.coordinator.last_edit,
     ),
 ]

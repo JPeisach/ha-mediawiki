@@ -65,6 +65,7 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
         self.userinfo = await self.api.async_get_userinfo()
         self.watched_pages = await self.api.async_get_watched_pages()
         self.last_edit = await self.api.async_get_last_edit()
+        self.sitename = await self.api.async_get_sitename()
 
     async def _async_update_data(self) -> Any:
         """Update data via library."""
