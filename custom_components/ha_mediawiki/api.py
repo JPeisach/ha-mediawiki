@@ -105,12 +105,29 @@ class MediaWikiApiClient:
         return ""
 
     # TODO: Across the entire file, fix types and returns
-    async def async_get_user_contributions(self) -> Any:
+    async def async_get_user_edit_count(self) -> int:
         if self._logged_in:
             return await asyncio.get_running_loop().run_in_executor(
-                None, self._user.contributions
+                None, self._user.editCount
             )
-        return ""
+        return -1
+
+    async def async_get_last_edit(
+        self,
+    ) -> tuple[pywikibot.Page, int, pywikibot.Timestamp, str | None] | None:
+        if self._logged_in:
+            return await asyncio.get_running_loop().run_in_executor(
+                None, lambda: self._user.last_edit
+            )
+        return None
+
+    def _get_watched_pages_list(self) -> list[str]:
+        ret = []
+        pg = self._site.watched_pages()
+        for i in pg:
+            ret.append(i)
+
+        return ret
 
     def _count_user_contribs(
         self,
@@ -125,6 +142,14 @@ class MediaWikiApiClient:
         return await asyncio.get_running_loop().run_in_executor(
             None, self._count_user_contribs
         )
+
+    async def async_get_watched_pages(self) -> list[str]:
+        if self._logged_in:
+            return await asyncio.get_running_loop().run_in_executor(
+                None,
+                self._get_watched_pages_list,
+            )
+        return []
 
     async def async_get_globaluserinfo(self) -> dict:
         if self._logged_in:

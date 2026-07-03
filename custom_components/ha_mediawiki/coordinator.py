@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING, Any
 
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from pywikibot import Timestamp
+import pywikibot
 
 from .api import (
     MediaWikiApiClient,
@@ -34,8 +36,9 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
     sitename: str
     user: User
     userinfo: dict
-    user_contributions: Any  # TODO: What's the type?
+    edit_count: Any  # TODO: What's the type?
     user_contributions_count: int
+    last_edit: Any
 
     def __init__(
         self,
@@ -50,6 +53,9 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
         self.config_entry = config_entry
         self.api = api
 
+    def get_user_contributions_count(self) -> int:
+        return self.user_contributions_count
+
     async def _async_setup(self) -> None:
         await self.api.login()
 
@@ -57,15 +63,14 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
         self.site = self.api.site()  # type: ignore  # noqa: PGH003
         self.user = self.api.user()
         self.userinfo = await self.api.async_get_userinfo()
+        self.watched_pages = await self.api.async_get_watched_pages()
+        self.last_edit = await self.api.async_get_last_edit()
 
     async def _async_update_data(self) -> Any:
         """Update data via library."""
         try:
             self.global_userinfo = await self.api.async_get_globaluserinfo()
-            self.user_contributions = await self.api.async_get_user_contributions()
-            self.user_contributions_count = (
-                await self.api.async_get_user_contributions_count()
-            )
+            self.edit_count = await self.api.async_get_user_edit_count()
         except MediaWikiApiClientAuthenticationError as exception:
             raise ConfigEntryAuthFailed(exception) from exception
         except MediaWikiApiClientError as exception:
