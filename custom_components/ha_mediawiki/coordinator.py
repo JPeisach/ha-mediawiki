@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING, Any
 
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from pywikibot import Timestamp
-import pywikibot
 
 from .api import (
     MediaWikiApiClient,
@@ -17,6 +15,7 @@ from .api import (
 )
 
 if TYPE_CHECKING:
+    import pywikibot
     from homeassistant.core import HomeAssistant
     from pywikibot import User
     from pywikibot.site import APISite
@@ -39,7 +38,7 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
     edit_count: Any  # TODO: What's the type?
     user_contributions_count: int
     last_edit_page: str | None
-    last_edit_time: Timestamp | None
+    last_edit_time: pywikibot.Timestamp | None
     last_edit_msg: str | None
 
     def __init__(

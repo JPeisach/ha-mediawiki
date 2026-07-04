@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, override
-
+from collections.abc import Callable
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
 from homeassistant.components.sensor import (
-    SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
@@ -75,7 +75,6 @@ async def async_setup_entry(
     )
 
 
-# TODO: Generic sensors
 class MediaWikiSensor(MediaWikiEntity, SensorEntity):
     """ha_mediawiki Sensor class."""
 
