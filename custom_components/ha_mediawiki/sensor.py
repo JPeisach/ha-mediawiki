@@ -41,9 +41,19 @@ ENTITY_DESCRIPTIONS: list[MediaWikiSensorEntityDescription] = [
         value_fn=lambda a: a.coordinator.edit_count,
     ),
     MediaWikiSensorEntityDescription(
-        key="last_edit",
-        name="Last Edit",
-        value_fn=lambda a: a.coordinator.last_edit,
+        key="last_edit_page_title",
+        name="Last Edit Page Title",
+        value_fn=lambda a: a.coordinator.last_edit_page,  # type: ignore
+    ),
+    MediaWikiSensorEntityDescription(
+        key="last_edit_timestamp",
+        name="Last Edit Time",
+        value_fn=lambda a: a.coordinator.last_edit_time,  # type: ignore
+    ),
+    MediaWikiSensorEntityDescription(
+        key="last_edit_msg",
+        name="Last Edit Message",
+        value_fn=lambda a: a.coordinator.last_edit_msg,  # type: ignore
     ),
 ]
 

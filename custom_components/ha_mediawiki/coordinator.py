@@ -38,7 +38,9 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
     userinfo: dict
     edit_count: Any  # TODO: What's the type?
     user_contributions_count: int
-    last_edit: Any
+    last_edit_page: str | None
+    last_edit_time: Timestamp | None
+    last_edit_msg: str | None
 
     def __init__(
         self,
@@ -64,7 +66,11 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
         self.user = self.api.user()
         self.userinfo = await self.api.async_get_userinfo()
         self.watched_pages = await self.api.async_get_watched_pages()
-        self.last_edit = await self.api.async_get_last_edit()
+        last_edit = await self.api.async_get_last_edit()
+        if last_edit is not None:
+            self.last_edit_page = last_edit[0].title()
+            self.last_edit_time = last_edit[2]
+            self.last_edit_msg = last_edit[3]
         self.sitename = await self.api.async_get_sitename()
 
     async def _async_update_data(self) -> Any:
