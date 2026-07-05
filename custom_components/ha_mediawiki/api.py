@@ -47,9 +47,9 @@ class MediaWikiApiClient:
     # pywikibot, but we need to ensure we don't make blocking calls
     # so each possible call gets its function instead of a generic
     # wrapper
-    def _getPage(self) -> BasePage | None:
+    def _getPage(self, page: str) -> BasePage | None:
         if self._site is not None:
-            p = pywikibot.Page(self._site, "Test")
+            p = pywikibot.Page(self._site, page)
             return p
         return None
 
@@ -163,3 +163,9 @@ class MediaWikiApiClient:
                 lambda: self._login_mgr.site.get_globaluserinfo(user=self._username),
             )
         return {}
+
+    async def async_get_page_extract(self, page_name: str) -> str:
+        page = await asyncio.get_running_loop().run_in_executor(
+            None, self._getPage, page_name
+        )
+        return await asyncio.get_running_loop().run_in_executor(None, page.extract)  # type: ignore

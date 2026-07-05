@@ -6,6 +6,7 @@
   ],
   "config_flow": true,
   "documentation": "https://github.com/jpeisach/ha_mediawiki",
+  "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/jpeisach/ha_mediawiki/issues",
   "version": "0.1.0"

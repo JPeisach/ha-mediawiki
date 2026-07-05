@@ -57,6 +57,9 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
     def get_user_contributions_count(self) -> int:
         return self.user_contributions_count
 
+    async def async_get_page_extract(self, page: str) -> str:
+        return await self.api.async_get_page_extract(page)
+
     async def _async_setup(self) -> None:
         await self.api.login()
 

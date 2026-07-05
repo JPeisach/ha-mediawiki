@@ -1,0 +1,12 @@
+get_page_extract:
+  target:
+    entity:
+      domain: sensor
+      integration: ha_mediawiki
+  fields:
+    page_name:
+      required: true
+      example: "Home Assistant"
+      default: ""
+      selector:
+        text:
