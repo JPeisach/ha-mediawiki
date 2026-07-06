@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 import pywikibot
 from pywikibot.login import ClientLoginManager
+from pywikibot.site import APISite
 
 if TYPE_CHECKING:
     import aiohttp
@@ -99,8 +100,13 @@ class MediaWikiApiClient:
         )
 
     async def async_get_sitename(self) -> str:
+        if isinstance(self._site, APISite):
+            apisite: APISite = self._site
+            return await asyncio.get_running_loop().run_in_executor(
+                None, lambda: apisite.siteinfo["sitename"]
+            )
         return await asyncio.get_running_loop().run_in_executor(
-            None, lambda: str(self._site)
+            None, lambda: str(self.site)
         )
 
     async def async_get_userinfo(self) -> Any:

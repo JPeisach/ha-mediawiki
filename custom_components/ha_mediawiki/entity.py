@@ -24,7 +24,7 @@ class MediaWikiEntity(CoordinatorEntity[MediaWikiDataUpdateCoordinator]):
                 ),
             },
             configuration_url=coordinator.config_entry.data[CONF_URL],
-            model=coordinator.site.sitename,
+            model=coordinator.sitename,
             model_id=coordinator.config_entry.data[CONF_USERNAME],
             name=coordinator.config_entry.data[CONF_NAME],
         )
