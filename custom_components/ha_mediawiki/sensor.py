@@ -6,23 +6,17 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-import voluptuous as vol
 from homeassistant.components.sensor import (
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.core import ServiceCall, ServiceResponse, SupportsResponse, callback
-from homeassistant.helpers import selector
-
-from custom_components.ha_mediawiki.const import DOMAIN
 
 from .entity import MediaWikiEntity
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
-    from homeassistant.helpers import entity_platform
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
     from .coordinator import MediaWikiDataUpdateCoordinator
@@ -70,29 +64,6 @@ async def async_setup_entry(
     async_add_entities: Callable[[list[SensorEntity]], None],
 ) -> None:
     """Set up the sensor platform."""
-
-    @callback
-    async def async_get_page_extract(call: ServiceCall) -> ServiceResponse:
-        """Get page extract"""
-        page = call.data.get("page_name")
-        extract = await entry.runtime_data.async_get_page_extract(page)
-        return {"message": extract}
-
-    hass.services.async_register(
-        DOMAIN,
-        service="get_page_extract",
-        schema=vol.Schema(
-            {
-                vol.Required("page_name"): selector.TextSelector(
-                    selector.TextSelectorConfig(
-                        type=selector.TextSelectorType.URL,
-                    ),
-                )
-            }
-        ),
-        service_func=async_get_page_extract,
-        supports_response=SupportsResponse.OPTIONAL,
-    )
 
     async_add_entities(
         [

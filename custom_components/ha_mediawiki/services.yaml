@@ -1,9 +1,9 @@
 get_page_extract:
-  target:
-    entity:
-      domain: sensor
-      integration: ha_mediawiki
   fields:
+    device_id:
+      selector:
+        device:
+          integration: ha_mediawiki
     page_name:
       required: true
       example: "Home Assistant"
