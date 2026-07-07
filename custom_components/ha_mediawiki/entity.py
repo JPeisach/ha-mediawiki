@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from homeassistant.const import CONF_NAME, CONF_URL, CONF_USERNAME
-from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.device_registry import DeviceInfo, DeviceEntryType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .coordinator import MediaWikiDataUpdateCoordinator
@@ -26,6 +26,7 @@ class MediaWikiEntity(CoordinatorEntity[MediaWikiDataUpdateCoordinator]):
             configuration_url=coordinator.config_entry.data[CONF_URL],
             model=coordinator.sitename,
             model_id=coordinator.config_entry.data[CONF_USERNAME],
+            entry_type=DeviceEntryType.SERVICE,
             name=coordinator.config_entry.data[CONF_NAME],
         )
 
