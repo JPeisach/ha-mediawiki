@@ -2,7 +2,7 @@
     "config": {
         "step": {
             "user": {
-                "description": "If you need help with the configuration have a look here: {documentation_url}",
+                "description": "Enter login information for your MediaWiki instance.",
                 "data": {
                     "username": "Username",
                     "password": "Password",
@@ -18,6 +18,22 @@
         },
         "abort": {
             "already_configured": "This entry is already configured."
+        }
+    },
+    "services": {
+        "get_page_extract": {
+            "description": "Get a page extract from a MediaWiki, if available",
+            "fields": {
+                "device_id": {
+                    "description": "The device that represents this MediaWiki instance.",
+                    "name": "MediaWiki Instance"
+                },
+                "page_name": {
+                    "description": "The name of the page to get the extract of.",
+                    "name": "Page Name"
+                }
+            },
+            "name": "Get Page Extract"
         }
     }
 }

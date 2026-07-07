@@ -1,0 +1,7 @@
+{
+    "services": {
+        "get_page_extract": {
+            "service": "mdi:page-next-outline"
+        }
+    }
+}
