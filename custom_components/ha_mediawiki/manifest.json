@@ -9,5 +9,8 @@
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/jpeisach/ha_mediawiki/issues",
+  "requirements": [
+    "pywikibot==11.0.0"
+  ],
   "version": "0.1.0"
 }
