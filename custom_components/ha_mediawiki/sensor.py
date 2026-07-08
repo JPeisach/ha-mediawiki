@@ -91,5 +91,8 @@ class MediaWikiSensor(MediaWikiEntity, SensorEntity):
 
     @property
     def native_value(self) -> StateType:
-        """Count contributions."""
-        return self.entity_description.value_fn(self)
+        """Get entity value."""
+        try:
+            return self.entity_description.value_fn(self)
+        except AttributeError:
+            return "N/A"
