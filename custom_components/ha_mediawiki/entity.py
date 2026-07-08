@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from homeassistant.const import CONF_NAME, CONF_URL, CONF_USERNAME
-from homeassistant.helpers.device_registry import DeviceInfo, DeviceEntryType
+from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .coordinator import MediaWikiDataUpdateCoordinator

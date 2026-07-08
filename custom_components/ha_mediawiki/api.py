@@ -22,18 +22,18 @@ class MediaWikiApiClient:
     # pywikibot, but we need to ensure we don't make blocking calls
     # so each possible call gets its function instead of a generic
     # wrapper
-    def _getPage(self, page: str) -> BasePage | None:
+    def _get_page(self, page: str) -> BasePage | None:
         if self._site is not None:
             p = pywikibot.Page(self._site, page)
             return p
         return None
 
-    # FIXME: should this be a public interface?
     def site(self) -> BaseSite:
+        """BaseSite instance of the API for easy reference."""
         return self._site
 
     def user(self) -> pywikibot.User:
-        # For quick reference
+        """User object for the API for easy reference."""
         return self._user
 
     def __init__(
@@ -74,6 +74,7 @@ class MediaWikiApiClient:
         )
 
     async def async_get_sitename(self) -> str:
+        """Get the MediaWiki site name."""
         if isinstance(self._site, APISite):
             apisite: APISite = self._site
             return await asyncio.get_running_loop().run_in_executor(
@@ -91,6 +92,7 @@ class MediaWikiApiClient:
 
     # TODO: Across the entire file, fix types and returns
     async def async_get_user_edit_count(self) -> int:
+        """Get the user's edit count."""
         if self._logged_in:
             return await asyncio.get_running_loop().run_in_executor(
                 None, self._user.editCount
@@ -100,6 +102,7 @@ class MediaWikiApiClient:
     async def async_get_last_edit(
         self,
     ) -> tuple[pywikibot.Page, int, pywikibot.Timestamp, str | None] | None:
+        """Get the information of the user's last edit."""
         if self._logged_in:
             return await asyncio.get_running_loop().run_in_executor(
                 None, lambda: self._user.last_edit
@@ -146,6 +149,6 @@ class MediaWikiApiClient:
 
     async def async_get_page_extract(self, page_name: str) -> str:
         page = await asyncio.get_running_loop().run_in_executor(
-            None, self._getPage, page_name
+            None, self._get_page, page_name
         )
         return await asyncio.get_running_loop().run_in_executor(None, page.extract)  # type: ignore

@@ -7,9 +7,6 @@ from typing import TYPE_CHECKING, Any
 
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-
-from .api import MediaWikiApiClient
-
 from pywikibot.exceptions import ClientError, NoUsernameError
 
 if TYPE_CHECKING:
@@ -18,6 +15,7 @@ if TYPE_CHECKING:
     from pywikibot import User
     from pywikibot.site import APISite
 
+    from .api import MediaWikiApiClient
     from .data import MediaWikiConfigEntry
 
 _LOGGER = logging.getLogger(__name__)

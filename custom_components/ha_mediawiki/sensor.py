@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -15,9 +14,10 @@ from homeassistant.components.sensor import (
 from .entity import MediaWikiEntity
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
-    from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
     from .coordinator import MediaWikiDataUpdateCoordinator
 
@@ -38,22 +38,22 @@ ENTITY_DESCRIPTIONS: list[MediaWikiSensorEntityDescription] = [
         name="Contributions",
         icon="mdi:format-quote-close",
         state_class=SensorStateClass.TOTAL,
-        value_fn=lambda a: a.coordinator.edit_count,
+        value_fn=lambda entity: entity.coordinator.edit_count,
     ),
     MediaWikiSensorEntityDescription(
         key="last_edit_page_title",
         name="Last Edit Page Title",
-        value_fn=lambda a: a.coordinator.last_edit_page,  # type: ignore
+        value_fn=lambda entity: entity.coordinator.last_edit_page,  # type: ignore
     ),
     MediaWikiSensorEntityDescription(
         key="last_edit_timestamp",
         name="Last Edit Time",
-        value_fn=lambda a: a.coordinator.last_edit_time,  # type: ignore
+        value_fn=lambda entity: entity.coordinator.last_edit_time,  # type: ignore
     ),
     MediaWikiSensorEntityDescription(
         key="last_edit_msg",
         name="Last Edit Message",
-        value_fn=lambda a: a.coordinator.last_edit_msg,  # type: ignore
+        value_fn=lambda entity: entity.coordinator.last_edit_msg,  # type: ignore
     ),
 ]
 
@@ -64,7 +64,6 @@ async def async_setup_entry(
     async_add_entities: Callable[[list[SensorEntity]], None],
 ) -> None:
     """Set up the sensor platform."""
-
     async_add_entities(
         [
             MediaWikiSensor(
