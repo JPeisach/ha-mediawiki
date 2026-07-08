@@ -17,7 +17,7 @@ from .api import (
 from .const import DOMAIN, LOGGER
 
 
-class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+class MediaWikiFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for MediaWiki Integration."""
 
     VERSION = 1
