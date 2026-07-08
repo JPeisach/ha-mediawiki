@@ -8,13 +8,11 @@ from homeassistant.const import CONF_NAME, CONF_PASSWORD, CONF_URL, CONF_USERNAM
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from homeassistant.loader import async_get_loaded_integration
+from pywikibot.exceptions import APIError, ClientError, NoUsernameError
 from slugify import slugify
 
 from .api import (
     MediaWikiApiClient,
-    MediaWikiApiClientAuthenticationError,
-    MediaWikiApiClientCommunicationError,
-    MediaWikiApiClientError,
 )
 from .const import DOMAIN, LOGGER
 
@@ -37,13 +35,13 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     password=user_input[CONF_PASSWORD],
                     site_url=user_input[CONF_URL],
                 )
-            except MediaWikiApiClientAuthenticationError as exception:
+            except NoUsernameError as exception:
                 LOGGER.warning(exception)
                 _errors["base"] = "auth"
-            except MediaWikiApiClientCommunicationError as exception:
+            except ClientError as exception:
                 LOGGER.error(exception)
                 _errors["base"] = "connection"
-            except MediaWikiApiClientError as exception:
+            except APIError as exception:
                 LOGGER.exception(exception)
                 _errors["base"] = "unknown"
             else:

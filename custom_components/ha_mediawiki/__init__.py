@@ -2,7 +2,7 @@
 Custom integration to integrate ha_mediawiki with Home Assistant.
 
 For more details about this integration, please refer to
-https://github.com/ludeeus/ha_mediawiki
+https://github.com/jpeisach/ha_mediawiki
 """
 
 from __future__ import annotations
@@ -60,7 +60,7 @@ async def async_setup_entry(
 
     @callback
     async def async_get_page_extract(call: ServiceCall) -> ServiceResponse:
-        """Get page extract"""
+        """Get page extract of a MediaWiki page."""
         page_name = call.data.get("page_name")
         device_id = call.data.get("device_id")
 

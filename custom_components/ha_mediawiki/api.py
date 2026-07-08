@@ -15,32 +15,6 @@ if TYPE_CHECKING:
     from pywikibot.site import BaseSite
 
 
-class MediaWikiApiClientError(Exception):
-    """Exception to indicate a general API error."""
-
-
-class MediaWikiApiClientCommunicationError(
-    MediaWikiApiClientError,
-):
-    """Exception to indicate a communication error."""
-
-
-class MediaWikiApiClientAuthenticationError(
-    MediaWikiApiClientError,
-):
-    """Exception to indicate an authentication error."""
-
-
-def _verify_response_or_raise(response: aiohttp.ClientResponse) -> None:
-    """Verify that the response is valid."""
-    if response.status in (401, 403):
-        msg = "Invalid credentials"
-        raise MediaWikiApiClientAuthenticationError(
-            msg,
-        )
-    response.raise_for_status()
-
-
 class MediaWikiApiClient:
     """Sample API Client."""
 

@@ -8,11 +8,9 @@ from typing import TYPE_CHECKING, Any
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import (
-    MediaWikiApiClient,
-    MediaWikiApiClientAuthenticationError,
-    MediaWikiApiClientError,
-)
+from .api import MediaWikiApiClient
+
+from pywikibot.exceptions import ClientError, NoUsernameError
 
 if TYPE_CHECKING:
     import pywikibot
@@ -80,7 +78,7 @@ class MediaWikiDataUpdateCoordinator(DataUpdateCoordinator):
         try:
             self.global_userinfo = await self.api.async_get_globaluserinfo()
             self.edit_count = await self.api.async_get_user_edit_count()
-        except MediaWikiApiClientAuthenticationError as exception:
+        except NoUsernameError as exception:
             raise ConfigEntryAuthFailed(exception) from exception
-        except MediaWikiApiClientError as exception:
+        except ClientError as exception:
             raise UpdateFailed(exception) from exception
