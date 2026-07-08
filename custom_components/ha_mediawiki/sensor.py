@@ -36,23 +36,26 @@ ENTITY_DESCRIPTIONS: list[MediaWikiSensorEntityDescription] = [
     MediaWikiSensorEntityDescription(
         key="contributions",
         name="Contributions",
-        icon="mdi:format-quote-close",
+        icon="mdi:file-document-edit-outline",
         state_class=SensorStateClass.TOTAL,
         value_fn=lambda entity: entity.coordinator.edit_count,
     ),
     MediaWikiSensorEntityDescription(
         key="last_edit_page_title",
         name="Last Edit Page Title",
+        icon="mdi:format-title",
         value_fn=lambda entity: entity.coordinator.last_edit_page,  # type: ignore
     ),
     MediaWikiSensorEntityDescription(
         key="last_edit_timestamp",
         name="Last Edit Time",
+        icon="mdi:clock-edit-outline",
         value_fn=lambda entity: entity.coordinator.last_edit_time,  # type: ignore
     ),
     MediaWikiSensorEntityDescription(
         key="last_edit_msg",
         name="Last Edit Message",
+        icon="mdi:message-text-outline",
         value_fn=lambda entity: entity.coordinator.last_edit_msg,  # type: ignore
     ),
 ]
