@@ -10,7 +10,9 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/jpeisach/ha_mediawiki/issues",
   "requirements": [
-    "pywikibot==11.4.2"
+    "mwparserfromhell>=0.5.2",
+    "pywikibot==11.4.2",
+    "requests>=2.20.1"
   ],
   "version": "0.1.0"
 }
