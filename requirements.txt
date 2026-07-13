@@ -1,5 +1,5 @@
 colorlog==6.10.1
 homeassistant==2026.7.1
 pip>=21.3.1
-pywikibot==11.4.2
+pywikibot==11.5.0
 ruff==0.15.7
